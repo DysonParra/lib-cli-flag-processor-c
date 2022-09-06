@@ -143,7 +143,8 @@ appR:
 # Make all the targets.
 all:
 	make clean
-	make dLib
+	make flag$(dLibMakeFormat)
+	make flag_processor$(dLibMakeFormat)
 	make app
 	./$(appName)
 
