@@ -27,6 +27,8 @@
  */
 int main(int argc, char** argv) {
 
+    argv = &argv[1];
+
     printf("\n...START...\n");
 
     char* requiredFlags[][20] = {
@@ -40,7 +42,7 @@ int main(int argc, char** argv) {
         {"-test", "--noTest"},
         {0}};
 
-    char* argsAux[] = {
+    char* defaultArgs[] = {
         "--useDefault",
         "-uses",
         "MKV",
@@ -54,12 +56,17 @@ int main(int argc, char** argv) {
         "_urls.xml",
         "--aac",
         "--noEncoder", 0};
+
     /*-
-    String arg;
-    for_each_array(arg, argsAux)
-        printf("%s\n", argsAux[index]);
+    char* arg;
+    for_each_array(arg, argv)
+        printf("%s\n", argv[index-1]);
+    printf("\n");
     */
-    Flag** flags = validateFlags(argsAux, requiredFlags, optionalFlags, 1);
+    
+    Flag** flags;
+    flags = convertArgsToFlags(argv, defaultArgs, requiredFlags, optionalFlags, 1);
+
     if (flags == NULL) {
         printf("...ERROR IN FLAGS...");
         return 0;

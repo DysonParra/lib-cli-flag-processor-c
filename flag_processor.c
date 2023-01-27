@@ -90,6 +90,32 @@ LANGUAGE DLLIMPORT CALLING void printFlagsArray(Flag** flags, int printNull) {
 }
 
 /**
+ * Muestra en consola la matriz indicada por {@code flags}
+ *
+ * @param flags   array de {@code String} que se va a imprimir en la consola.
+ * @param message mensaje que se mostrará antes de imprimir las flags.
+ */
+LANGUAGE DLLIMPORT CALLING void printFlagsMatrix(String flags[][20], String message) {
+    printf("%s\n", message);
+    String line = malloc((200 + 30) * (sizeof(String)));
+    char **valueOr;
+    for_each_array(valueOr, flags) {
+        if (valueOr[0] == NULL)
+            break;
+        sprintf(line, "%s", valueOr[0]);
+        String tmp;
+        for_each_array_idx(valuesOrLength, tmp, valueOr);
+        for (int i = 1; i < valuesOrLength; i++) {
+            sprintf(line, "%s or %s", line, valueOr[i]);
+        }
+        printf("%s\n", line);
+    }
+    if (flags[0] == 0)
+        printf("Not specified.\n");
+    printf("\n");
+}
+
+/**
  * Compara si hay {@code String} que están tanto en la matriz {@code requiredFlags} como en la
  * matriz {@code optionalFlags}.
  *
@@ -425,7 +451,7 @@ CALLING int getArraySize(String* args) {
  * Analiza si el array {@code args} representa una secuencia válida de flags, verifica que las
  * flags requeridas {@code requiredFlags} estén todas especificadas allí, revisa que se incluyan
  * cero o más flags opcionales {@code optionalFlags} y si {@code allowUnknownFlags} es
- * {@code true} se aceptan flags que sean opcionales ni requeridas caso afirmativo.
+ * {@code true} se aceptan flags que no sean opcionales ni requeridas caso afirmativo.
  *
  * @param args              un array de {@code String} que se va a procesar para verificar si es
  *                          una secuencia de flags válida.
@@ -448,7 +474,7 @@ CALLING int getArraySize(String* args) {
  *         contrario {@code null} y se mostrará en consola porqué no fue posible procesar
  *         {@code args}.
  */
-LANGUAGE DLLIMPORT CALLING Flag** validateFlags(String* args, String requiredFlags[][20], String optionalFlags[][20], int allowUnknownFlags) {
+CALLING Flag** validateFlags(String* args, String requiredFlags[][20], String optionalFlags[][20], int allowUnknownFlags) {
     String result;
     int argsSize = getArraySize(args);
     Flag** inputFlags;
@@ -479,4 +505,60 @@ LANGUAGE DLLIMPORT CALLING Flag** validateFlags(String* args, String requiredFla
         return null;
     }
     return outputFlags;
+}
+
+/**
+ * Analiza si el array {@code args} representa una secuencia válida de flags, verifica que las
+ * flags requeridas {@code requiredFlags} estén todas especificadas allí, revisa que se incluyan
+ * cero o más flags opcionales {@code optionalFlags} y si {@code allowUnknownFlags} es
+ * {@code true} se aceptan flags que no sean opcionales ni requeridas caso afirmativo.
+ *
+ * @param args              un array de {@code String} que se va a procesar para verificar si es
+ *                          una secuencia de flags válida.
+ * @param defaultArgs       un array de {@code String} que se va a procesar para verificar si es
+ *                          una secuencia de flags válida en caso de {@code  args} se encuentre
+ *                          vacío.
+ * @param requiredFlags     una matriz con las flags requeridas; en cada fila se indican las
+ *                          flags y en cada columna indica cuales flags son excluyentes (si se
+ *                          incluye la valueOr de una columna no se pueden incluir las flags en
+ *                          las otras columnas de esa fila) al ser requeridas se debe incluir
+ *                          una y solo una valueOr de cada fila.
+ * @param optionalFlags     una matriz con las flags opcionales; en cada fila se indican las
+ *                          flags y en cada columna indica cuales flags son excluyentes (si se
+ *                          incluye la valueOr de una columna no se pueden incluir las flags en
+ *                          las otras columnas de esa fila) al ser opcionales se pueden o no
+ *                          incluir una y solo una valueOr de cada fila.
+ * @param allowUnknownFlags si {@code true} se aceptan flags que no estén en el array
+ *                          {@code requiredFlags} ni en el array {@code optionalFlags}, caso
+ *                          contrario si se encuentra una valueOr que no esté en los arrays se
+ *                          devuelve {@code null} y se mostrará mensaje de error.
+ * @return array de {@code Flag} si se puede procesar {@code args} utilizando
+ *         {@code requiredFlags} y {@code optionalFlags} sin ningún inconveniente, caso
+ *         contrario {@code null} y se mostrará en consola porqué no fue posible procesar
+ *         {@code args}.
+ */
+LANGUAGE DLLIMPORT CALLING Flag** convertArgsToFlags(String* args, String* defaultArgs, String requiredFlags[][20], String optionalFlags[][20], int allowUnknownFlags) {
+    Flag** flags;
+    char* emptyFlags[][20] = {{0}};
+    requiredFlags = requiredFlags != null ? requiredFlags : emptyFlags;
+    optionalFlags = optionalFlags != null ? optionalFlags : emptyFlags;
+    if ((defaultArgs == null || defaultArgs[0] == 0)
+            && (args == null || args[0] == 0)) {
+        printf("Flags and default flags not specified...\n");
+        flags = null;
+    } else if (args != null && args[0] != 0) {
+        printf("Validating specified flags...\n");
+        flags = validateFlags(args, requiredFlags, optionalFlags, allowUnknownFlags);
+    } else {
+        printf("No flags specified, validating default flags...\n");
+        flags = validateFlags(defaultArgs, requiredFlags, optionalFlags, allowUnknownFlags);
+    }
+
+    if (flags == null) {
+        printf("\n");
+        printFlagsMatrix(requiredFlags, "Required flags:");
+        printFlagsMatrix(optionalFlags, "Optional flags:");
+    }
+
+    return flags;
 }

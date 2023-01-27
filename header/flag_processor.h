@@ -36,8 +36,8 @@
 #endif
 
 LANGUAGE DLLIMPORT CALLING void printFlagsArray(Flag** flags, int printNull);
-LANGUAGE DLLIMPORT CALLING Flag** validateFlags(char** args, char* requiredFlags[][20], char* optionalFlags[][20], int allowUnknownFlags);
-
+LANGUAGE DLLIMPORT CALLING void printFlagsMatrix(char* flags[][20], char* message);
+LANGUAGE DLLIMPORT CALLING Flag** convertArgsToFlags(char** args, char** defaultArgs, char* requiredFlags[][20], char* optionalFlags[][20], int allowUnknownFlags);
 #if !defined BUILDING
 #undef LANGUAGE
 #undef DLLIMPORT
