@@ -26,7 +26,7 @@ getLibIncludes = $(foreach var,$1,$(shell [ -f $(var)$2 ] && echo $(var)$2 || ec
 getUpperCase = $(shell echo '$1' | tr '[:lower:]' '[:upper:]')
 getStaticDefinitions = $(call getUpperCase, $(subst $(sLibFormat),$(staticSufix),$(addprefix -D ,$1)))
 prefferDynamic=1
-appName = tester
+appName = app
 
 # Clean all objects.
 cleanObjs:
@@ -145,6 +145,7 @@ all:
 	make clean
 	make flag$(dLibMakeFormat)
 	make flag_processor$(dLibMakeFormat)
+	make tester$(dLibMakeFormat)
 	make app
 	./$(appName)
 

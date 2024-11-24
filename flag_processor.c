@@ -78,15 +78,17 @@ BOOL APIENTRY DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved) {
  * @param printNull indica si se van a imprimir las flags con valor de {@code null}
  */
 LANGUAGE DLLIMPORT CALLING void printFlagsArray(Flag** flags, int printNull) {
-    printf("\nSTART Flags:\n");
-    Flag* flag;
-    for_each_array(flag, flags) {
-        if (flag != NULL_FLAG)
-            printf("%s\n", flag_to_string(flag));
-        else if (printNull)
-            printf("(null)\n");
+    printf("\nFlags START\n");
+    if (flags != null) {
+        Flag* flag;
+        for_each_array(flag, flags) {
+            if (flag != NULL_FLAG)
+                printf("%s\n", flag_to_string(flag));
+            else if (printNull)
+                printf("(null)\n");
+        }
     }
-    printf("END Flags\n\n");
+    printf("Flags END\n\n");
 }
 
 /**
@@ -98,15 +100,15 @@ LANGUAGE DLLIMPORT CALLING void printFlagsArray(Flag** flags, int printNull) {
 LANGUAGE DLLIMPORT CALLING void printFlagsMatrix(String flags[][20], String message) {
     printf("%s\n", message);
     String line = malloc((200 + 30) * (sizeof(String)));
-    char **valueOr;
-    for_each_array(valueOr, flags) {
-        if (valueOr[0] == NULL)
+    char **flag;
+    for_each_array(flag, flags) {
+        if (flag[0] == NULL)
             break;
-        sprintf(line, "%s", valueOr[0]);
+        sprintf(line, "%s", flag[0]);
         String tmp;
-        for_each_array_idx(valuesOrLength, tmp, valueOr);
+        for_each_array_idx(valuesOrLength, tmp, flag);
         for (int i = 1; i < valuesOrLength; i++) {
-            sprintf(line, "%s or %s", line, valueOr[i]);
+            sprintf(line, "%s or %s", line, flag[i]);
         }
         printf("%s\n", line);
     }
@@ -520,17 +522,17 @@ CALLING Flag** validateFlags(String* args, String requiredFlags[][20], String op
  *                          vacío.
  * @param requiredFlags     una matriz con las flags requeridas; en cada fila se indican las
  *                          flags y en cada columna indica cuales flags son excluyentes (si se
- *                          incluye la valueOr de una columna no se pueden incluir las flags en
- *                          las otras columnas de esa fila) al ser requeridas se debe incluir
- *                          una y solo una valueOr de cada fila.
+ *                          incluye la flag de una columna no se pueden incluir las flags en las
+ *                          otras columnas de esa fila) al ser requeridas se debe incluir una y
+ *                          solo una flag de cada fila.
  * @param optionalFlags     una matriz con las flags opcionales; en cada fila se indican las
  *                          flags y en cada columna indica cuales flags son excluyentes (si se
- *                          incluye la valueOr de una columna no se pueden incluir las flags en
- *                          las otras columnas de esa fila) al ser opcionales se pueden o no
- *                          incluir una y solo una valueOr de cada fila.
+ *                          incluye la flag de una columna no se pueden incluir las flags en las
+ *                          otras columnas de esa fila) al ser opcionales se pueden o no incluir
+ *                          una y solo una flag de cada fila.
  * @param allowUnknownFlags si {@code true} se aceptan flags que no estén en el array
  *                          {@code requiredFlags} ni en el array {@code optionalFlags}, caso
- *                          contrario si se encuentra una valueOr que no esté en los arrays se
+ *                          contrario si se encuentra una flag que no esté en los arrays se
  *                          devuelve {@code null} y se mostrará mensaje de error.
  * @return array de {@code Flag} si se puede procesar {@code args} utilizando
  *         {@code requiredFlags} y {@code optionalFlags} sin ningún inconveniente, caso
@@ -558,7 +560,9 @@ LANGUAGE DLLIMPORT CALLING Flag** convertArgsToFlags(String* args, String* defau
         printf("\n");
         printFlagsMatrix(requiredFlags, "Required flags:");
         printFlagsMatrix(optionalFlags, "Optional flags:");
-    }
+        printf("Error in flags\n");
+    } else
+        printFlagsArray(flags, 1);
 
     return flags;
 }

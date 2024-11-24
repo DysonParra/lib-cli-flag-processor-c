@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @fileoverview    {FileName}
  *
  * @version         2.0
@@ -19,18 +19,12 @@
 #include <stdlib.h>
 
 /**
- * Entrada principal del sistema.
+ * Ejecuta las pruebas de la aplicación.
  *
- * @param argc cantidad de argumentos pasados en la linea de comandos.
- * @param argv argumentos de la linea de comandos.
- * @return {0} si el programa se ejecutó correctamente.
+ * @param args argumentos de la linea de comandos.
+ * @return {@code true} si se ejecutan las pruebas correctamente, {@code false} caso contrario.
  */
-int main(int argc, char** argv) {
-
-    argv = &argv[1];
-
-    printf("\n...START...\n");
-
+LANGUAGE DLLIMPORT CALLING int startTesting(int argc, char** argv) {
     char* requiredFlags[][20] = {
         {"-use", "--notUse", "--find"},
         {"-name", "--noName"},
@@ -57,22 +51,9 @@ int main(int argc, char** argv) {
         "--aac",
         "--noEncoder", 0};
 
-    /*-
-    char* arg;
-    for_each_array(arg, argv)
-        printf("%s\n", argv[index-1]);
-    printf("\n");
-    */
+    Flag** flags = convertArgsToFlags(argv, defaultArgs, requiredFlags, optionalFlags, 1);
+    if (flags != NULL)
+        printf("Flags success processed\n");
     
-    Flag** flags;
-    flags = convertArgsToFlags(argv, defaultArgs, requiredFlags, optionalFlags, 1);
-
-    if (flags == NULL) {
-        printf("...ERROR IN FLAGS...");
-        return 0;
-    }
-
-    printFlagsArray(flags, 1);
-    printf("...END...");
-    return 0;
+    return flags != NULL;
 }

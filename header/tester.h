@@ -31,6 +31,8 @@
 #define for_each_array(item, array) for_each_array_idx(index, item, array)
 #endif
 
+LANGUAGE DLLIMPORT CALLING int startTesting(int argc, char** argv);
+
 #if !defined BUILDING
 #undef LANGUAGE
 #undef DLLIMPORT
