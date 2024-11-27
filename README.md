@@ -1,3 +1,6 @@
+# Repository naming
+To get information of how this user is naming the repositories go [here](https://github.com/DysonParra#repository-naming)
+
 # Information of the project.
   Cli lib that receive an undetermined number of arguments, analyze if are correctly formed and if yes parse it into structs or else print the specific error in console.    
 The flags are from two types (you can use the two at same time):  
