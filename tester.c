@@ -54,6 +54,6 @@ LANGUAGE DLLIMPORT CALLING int startTesting(int argc, char** argv) {
     Flag** flags = convertArgsToFlags(argv, defaultArgs, requiredFlags, optionalFlags, 1);
     if (flags != NULL)
         printf("Flags success processed\n");
-    
+
     return flags != NULL;
 }
