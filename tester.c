@@ -1,5 +1,5 @@
 /*
- * @fileoverview    {FileName}
+ * @overview        {FileName}
  *
  * @version         2.0
  *
@@ -21,7 +21,7 @@
 /**
  * Ejecuta las pruebas de la aplicación.
  *
- * @param args argumentos de la linea de comandos.
+ * @param args argumentos pasados por consola.
  * @return {@code true} si se ejecutan las pruebas correctamente, {@code false} caso contrario.
  */
 LANGUAGE DLLIMPORT CALLING int startTesting(int argc, char** argv) {
