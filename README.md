@@ -6,12 +6,12 @@ To get information of how this user is naming the repositories go [here](https:/
 The flags are from two types (you can use the two at same time):  
   * With value: an alphanumeric string started with '-' and the next argument must be the value of the flag.  
   Example:  -downloadPath documents   -sourceFile myFile.xml   -rootDir C:/project  
-  * Withouth value: an alphanumerirc string started with '--'.  
+  * without value: an alphanumerirc string started with '--'.  
   Example:  --useDefault  --notUseIncognito  --generateLogFile  --preserveTempFiles  
 
     For use the library you need to specify in source code a sets of flags:
     * Required: The flags that if are not included in the arguments the lib return an error.  
-    * Optional: The flags that can or not be included in the arguments withouth problem.  
+    * Optional: The flags that can or not be included in the arguments without problem.  
     * Default: The flags that are used if the cli arguments not specify any flag.  
 
 The required and the optional flags are a matrix (can be different size), that in each row defined a set of flags that are just like a XOR, only one of these flags must be included, and the default flags are a vector, example:
@@ -60,7 +60,7 @@ There's two type of libraries:
 # Makefile
 There's some important variables:
   - appName  
-    The name of the source file with main method withouth extension.
+    The name of the source file with main method without extension.
   - prefferDynamic  
     If there are a dynamic lib (.dll) and a static lib (.a) for the same source file (.c), when create the binary file it need to decide which use to generate the binary, so if the value is 0 use the static, and else use the dynamic.
 
@@ -79,6 +79,6 @@ Generally the only one task used is 'all', but these task call another tasks, an
   - make appR  
     It executes make app and then run the app.
   - make appN
-    Generate or try to generate the binary file (.exe) withouth identify the libraries to link.
+    Generate or try to generate the binary file (.exe) without identify the libraries to link.
   - make appNR
     It executes make appN and then run the app.
